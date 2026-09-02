@@ -1,0 +1,87 @@
+<section class="toys-page">
+
+  <div class="toys-page__header">
+
+    <h1>Katalog igračaka</h1>
+
+    <p>
+      Pronađite savršenu igračku za svoje dete.
+    </p>
+
+  </div>
+
+
+  @if (ucitavanje) {
+
+    <div class="toys-page__message">
+      Učitavanje igračaka...
+    </div>
+
+  }
+
+
+  @if (greska) {
+
+    <div class="toys-page__error">
+      {{ greska }}
+    </div>
+
+  }
+
+
+  @if (!ucitavanje && !greska) {
+
+    <app-toy-filters
+      (filtersChanged)="primeniFiltere($event)"
+    />
+
+
+    <div class="toys-page__count">
+
+      Pronađeno igračaka:
+
+      <strong>
+        {{ filtriraneIgracke.length }}
+      </strong>
+
+    </div>
+
+
+    @if (filtriraneIgracke.length > 0) {
+
+      <div class="toys-page__grid">
+
+        @for (
+          igracka of filtriraneIgracke;
+          track igracka.toyId
+        ) {
+
+          <app-toy-card
+            [toy]="igracka"
+            (detailsClicked)="prikaziDetalje($event)"
+          />
+
+        }
+
+      </div>
+
+    }
+
+
+    @if (filtriraneIgracke.length === 0) {
+
+      <div class="toys-page__empty">
+
+        <h2>Nema pronađenih igračaka</h2>
+
+        <p>
+          Pokušajte da promenite kriterijume pretrage.
+        </p>
+
+      </div>
+
+    }
+
+  }
+
+</section>

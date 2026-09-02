@@ -1,0 +1,76 @@
+<section class="toy-filters">
+  <div class="toy-filters_header">
+    <h2>Pretraga i filteri</h2>
+    <button mat-stroked-button color="warn" (click)="obrisiFiltere()">
+      <mat-icon>clear</mat-icon>
+      Obriši filtere
+    </button>
+  </div>
+
+  <div class="toy-filters_grid">
+    <mat-form-field appearance="outline" class="toy-filters_field toy-filters_field--wide">
+      <mat-label>Pretraga</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Unesite naziv ili opis..."
+        [(ngModel)]="filteri.search"
+        (input)="primeniFiltere()"
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="toy-filters_field">
+      <mat-label>Tip igračke</mat-label>
+      <mat-select [(ngModel)]="filteri.typeId" (selectionChange)="primeniFiltere()">
+        <mat-option [value]="null">Svi tipovi</mat-option>
+        @for (tip of tipoviIgracaka; track tip.typeId) {
+          <mat-option [value]="tip.typeId">{{ tip.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="toy-filters_field">
+      <mat-label>Uzrast</mat-label>
+      <mat-select [(ngModel)]="filteri.ageGroupId" (selectionChange)="primeniFiltere()">
+        <mat-option [value]="null">Svi uzrasti</mat-option>
+        @for (grupa of starosneGrupe; track grupa.ageGroupId) {
+          <mat-option [value]="grupa.ageGroupId">{{ grupa.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="toy-filters_field">
+      <mat-label>Ciljna grupa</mat-label>
+      <mat-select [(ngModel)]="filteri.targetGroup" (selectionChange)="primeniFiltere()">
+        <mat-option value="">Sve</mat-option>
+        <mat-option value="devojčica">Za devojčice</mat-option>
+        <mat-option value="dečak">Za dečake</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="toy-filters_field">
+      <mat-label>Minimalna cena</mat-label>
+      <input
+        matInput
+        type="number"
+        min="0"
+        placeholder="Od"
+        [(ngModel)]="filteri.minPrice"
+        (input)="primeniFiltere()"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="toy-filters_field">
+      <mat-label>Maksimalna cena</mat-label>
+      <input
+        matInput
+        type="number"
+        min="0"
+        placeholder="Do"
+        [(ngModel)]="filteri.maxPrice"
+        (input)="primeniFiltere()"
+      />
+    </mat-form-field>
+  </div>
+</section>

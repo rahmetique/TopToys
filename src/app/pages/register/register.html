@@ -1,0 +1,92 @@
+<section class="register">
+  <mat-card class="register_card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title><h1>Registracija</h1></mat-card-title>
+      <mat-card-subtitle class="register_description">
+        Kreirajte nalog da biste mogli da rezervišete igračke.
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (greska) {
+        <div class="register_error">
+          {{ greska }}
+        </div>
+      }
+
+      <form #registerForm="ngForm" (ngSubmit)="registrujSe(registerForm)" class="register_form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Ime</mat-label>
+          <input matInput name="firstName" required ngModel #firstNameModel="ngModel" />
+          @if (firstNameModel.touched && firstNameModel.invalid) {
+            <mat-error>Unesite vaše ime.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Prezime</mat-label>
+          <input matInput name="lastName" required ngModel #lastNameModel="ngModel" />
+          @if (lastNameModel.touched && lastNameModel.invalid) {
+            <mat-error>Unesite vaše prezime.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput name="email" type="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" ngModel #emailModel="ngModel" />
+          @if (emailModel.touched && emailModel.invalid) {
+            <mat-error>Unesite ispravnu email adresu.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Telefon (Srbija)</mat-label>
+          <input matInput name="phone" type="tel" required pattern="^(\+381|0)6[0-9]\s?[0-9]{3}\s?[0-9]{3,4}$" placeholder="+38161234567" ngModel #phoneModel="ngModel" />
+          @if (phoneModel.touched && phoneModel.invalid) {
+            <mat-error>Unesite ispravan srpski broj telefona.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Grad (Srbija)</mat-label>
+          <mat-select name="city" required ngModel #cityModel="ngModel">
+            @for (grad of gradoviSrbije; track grad) {
+              <mat-option [value]="grad">{{ grad }}</mat-option>
+            }
+          </mat-select>
+          @if (cityModel.touched && cityModel.invalid) {
+            <mat-error>Izaberite grad sa liste.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Ulica i broj</mat-label>
+          <input matInput name="street" required placeholder="Knez Mihailova 10" ngModel #streetModel="ngModel" />
+          @if (streetModel.touched && streetModel.invalid) {
+            <mat-error>Unesite ulicu i broj.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Lozinka</mat-label>
+          <input matInput name="password" [type]="showPassword ? 'text' : 'password'" required minlength="6" ngModel #passwordModel="ngModel" />
+          <button type="button" mat-icon-button matSuffix (click)="togglePasswordVisibility()">
+            <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (passwordModel.touched && passwordModel.invalid) {
+            <mat-error>Lozinka mora imati najmanje 6 karaktera.</mat-error>
+          }
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" class="full-width register_button" type="submit" [disabled]="registerForm.invalid">
+          Registruj se
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-footer class="register_login">
+      <span>Već imate nalog?</span>
+      <a routerLink="/login" class="register_login-link">Prijavite se</a>
+    </mat-card-footer>
+  </mat-card>
+</section>

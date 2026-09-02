@@ -1,0 +1,143 @@
+<section class="cart">
+  <div class="cart_header">
+    <h1>Moja korpa</h1>
+    <a routerLink="/toys" class="cart_back">
+      &larr; Nastavi kupovinu
+    </a>
+  </div>
+
+  @if (rezervacije.length === 0) {
+    <div class="cart_empty">
+      <h2>Korpa je prazna</h2>
+      <p>Još uvek nemate rezervisane igračke.</p>
+      <a routerLink="/toys" class="cart_button">
+        Pogledaj igračke
+      </a>
+    </div>
+  }
+
+  @if (rezervacije.length > 0) {
+    <div class="cart_content">
+      <div class="cart_items">
+        @if (potvrdjeneKupovine.length > 0) {
+          <div class="cart_hide-actions">
+            <button
+              type="button"
+              class="cart_hide-button"
+              (click)="sakrijPotvrdjene()"
+            >
+              Sakrij potvrđene kupovine
+            </button>
+          </div>
+        }
+
+        @for (rezervacija of rezervacije; track rezervacija.id) {
+          @if (!rezervacija.sakriveno) {
+            <article class="cart-item">
+              <img
+                [src]="'https://toy.pequla.com' + rezervacija.toy.imageUrl"
+                [alt]="rezervacija.toy.name"
+                class="cart-item_image"
+              />
+              <div class="cart-item_info">
+                <h2>{{ rezervacija.toy.name }}</h2>
+                <p>{{ rezervacija.toy.price | number: '1.0-0' }} RSD</p>
+                <span
+                  class="cart-item_status"
+                  [class.cart-item_status--cancelled]="rezervacija.status === 'otkazano'"
+                  [class.cart-item_status--confirmed]="rezervacija.status === 'potvrdjeno'"
+                >
+                  {{ rezervacija.status }}
+                </span>
+
+                <!-- БЛОК ДЛЯ ОЦЕНКИ И ПЕРЕХОДА К ОТЗЫВУ -->
+                @if (rezervacija.status === 'potvrdjeno') {
+                  <div class="cart-item_rating-box">
+                    <span class="rating-label">Ocenite igračku:</span>
+                    <app-star-rating
+                      [rating]="getOcenaIgracke(rezervacija.toy.toyId)"
+                      (ratingChange)="oceniIgracku(rezervacija.toy.toyId, $event)"
+                    >
+                    </app-star-rating>
+                    
+                    <a [routerLink]="['/toys', rezervacija.toy.toyId]" class="cart-item_review-link">
+                      Napišite recenziju za ovu igračku &rarr;
+                    </a>
+                  </div>
+                }
+              </div>
+
+              <!-- БЛОК ДЛЯ КОЛИЧЕСТВА -->
+              <div class="cart-item_quantity">
+                @if (rezervacija.status === 'rezervisano') {
+                  <button
+                    type="button"
+                    (click)="promeniKolicinu(rezervacija.id, rezervacija.quantity - 1)"
+                    [disabled]="rezervacija.quantity <= 1"
+                  >
+                    -
+                  </button>
+                  <span>{{ rezervacija.quantity }}</span>
+                  <button
+                    type="button"
+                    (click)="promeniKolicinu(rezervacija.id, rezervacija.quantity + 1)"
+                  >
+                    +
+                  </button>
+                } @else if (rezervacija.status === 'potvrdjeno') {
+                  <span class="cart-item_quantity-fixed">Količina: {{ rezervacija.quantity }}</span>
+                } @else {
+                  <span>{{ rezervacija.quantity }}</span>
+                }
+              </div>
+
+              <div class="cart-item_actions">
+                @if (rezervacija.status === 'rezervisano') {
+                  <button
+                    type="button"
+                    class="btn-action btn-action--cancel"
+                    (click)="promeniStatus(rezervacija.id, 'otkazano')"
+                  >
+                    Otkaži
+                  </button>
+                }
+                @if (rezervacija.status === 'otkazano') {
+                  <button
+                    type="button"
+                    class="btn-action btn-action--restore"
+                    (click)="promeniStatus(rezervacija.id, 'rezervisano')"
+                  >
+                    Vrati
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-action btn-action--delete"
+                    (click)="obrisiRezervaciju(rezervacija.id)"
+                  >
+                    Obriši
+                  </button>
+                }
+              </div>
+            </article>
+          }
+        }
+      </div>
+
+      <aside class="cart_summary">
+        <h2>Pregled rezervacije</h2>
+        <div class="cart_summary-row">
+          <span>Ukupno</span>
+          <strong>{{ ukupnaCena | number: '1.0-0' }} RSD</strong>
+        </div>
+        <button
+          type="button"
+          class="cart_reserve-button"
+          [disabled]="aktivneRezervacije.length === 0"
+          (click)="potvrdiSve()"
+        >
+          Potvrdi rezervaciju
+        </button>
+      </aside>
+    </div>
+  }
+</section>

@@ -1,0 +1,38 @@
+<header class="header">
+  <div class="header_container">
+    <a routerLink="/" class="header_logo" aria-label="TopToys Početna">
+      <span class="header_logo-first">Top</span><span class="header_logo-second">Toys</span>
+    </a>
+
+    <nav class="header_navigation">
+      <a mat-button routerLink="/" routerLinkActive="header_link--active" [routerLinkActiveOptions]="{ exact: true }">
+        Početna
+      </a>
+      <a mat-button routerLink="/toys" routerLinkActive="header_link--active">
+        Igračke
+      </a>
+      <a mat-button routerLink="/cart" routerLinkActive="header_link--active" class="header_cart">
+        <mat-icon [matBadge]="brojRezervacija" [matBadgeHidden]="brojRezervacija === 0" matBadgeColor="warn">
+          shopping_cart
+        </mat-icon>
+        <span class="cart-text">Korpa</span>
+      </a>
+    </nav>
+
+    <div class="header_user">
+      @if (korisnik()) {
+        <a mat-stroked-button routerLink="/profile" routerLinkActive="header_link--active">
+          <mat-icon>person</mat-icon>
+          Moj profil
+        </a>
+      } @else {
+        <a mat-button routerLink="/login" routerLinkActive="header_link--active">
+          Prijava
+        </a>
+        <a mat-raised-button color="primary" routerLink="/register">
+          Registracija
+        </a>
+      }
+    </div>
+  </div>
+</header>

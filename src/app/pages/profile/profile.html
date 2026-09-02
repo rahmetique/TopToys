@@ -1,0 +1,407 @@
+<section class="profile">
+
+  @if (korisnik(); as user) {
+
+    <div class="profile__card">
+
+      <!-- ======================================= -->
+      <!-- HEADER -->
+      <!-- ======================================= -->
+
+      <div class="profile__header">
+
+        <div>
+
+          <h1>Moj profil</h1>
+
+          <p>
+            Upravljajte svojim ličnim podacima i podešavanjima.
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          class="profile__button profile__button--logout"
+          (click)="odjaviSe()"
+        >
+          Odjavi se
+        </button>
+
+      </div>
+
+      <!-- ======================================= -->
+      <!-- LIČNI PODACI -->
+      <!-- ======================================= -->
+
+      <section class="profile__section">
+
+        <div class="profile__section-header">
+
+          <h2>Lični podaci</h2>
+
+          @if (!izmenaPodataka) {
+
+            <button
+              type="button"
+              class="profile__button profile__button--secondary"
+              (click)="otvoriIzmenuPodataka()"
+            >
+              Izmeni podatke
+            </button>
+
+          }
+
+        </div>
+
+        @if (!izmenaPodataka) {
+
+          <div class="profile__row">
+
+            <span>Ime i prezime</span>
+
+            <strong>
+              {{ user.firstName }}
+              {{ user.lastName }}
+            </strong>
+
+          </div>
+
+          <div class="profile__row">
+
+            <span>Email</span>
+
+            <strong>
+              {{ user.email }}
+            </strong>
+
+          </div>
+
+          <div class="profile__row">
+
+            <span>Telefon</span>
+
+            <strong>
+              {{ user.phone || '...' }}
+            </strong>
+
+          </div>
+
+          <div class="profile__row">
+
+            <span>Adresa</span>
+
+            <strong>
+              {{ user.address || '...' }}
+            </strong>
+
+          </div>
+
+        } @else {
+
+          <div class="profile__form">
+
+            <div class="profile__field">
+
+              <label for="firstName">
+                Ime
+              </label>
+
+              <input
+                id="firstName"
+                type="text"
+                [(ngModel)]="podaciForme.firstName"
+              />
+
+            </div>
+
+            <div class="profile__field">
+
+              <label for="lastName">
+                Prezime
+              </label>
+
+              <input
+                id="lastName"
+                type="text"
+                [(ngModel)]="podaciForme.lastName"
+              />
+
+            </div>
+
+            <div class="profile__field">
+
+              <label for="phone">
+                Telefon
+              </label>
+
+              <input
+                id="phone"
+                type="tel"
+                [(ngModel)]="podaciForme.phone"
+              />
+
+            </div>
+
+            <div class="profile__field">
+
+              <label for="address">
+                Adresa
+              </label>
+
+              <input
+                id="address"
+                type="text"
+                [(ngModel)]="podaciForme.address"
+              />
+
+            </div>
+
+            <div class="profile__form-actions">
+
+              <button
+                type="button"
+                class="profile__button profile__button--primary"
+                (click)="sacuvajPodatke()"
+              >
+                Sačuvaj
+              </button>
+
+              <button
+                type="button"
+                class="profile__button profile__button--secondary"
+                (click)="otkaziIzmenuPodataka()"
+              >
+                Otkaži
+              </button>
+
+            </div>
+
+          </div>
+
+        }
+
+      </section>
+
+      <!-- ======================================= -->
+      <!-- PODEŠAVANJA -->
+      <!-- ======================================= -->
+
+      <section class="profile__section">
+
+        <div class="profile__section-header">
+
+          <div>
+
+            <h2>Podešavanja</h2>
+
+            <p class="profile__hint">
+              Omiljene kategorije i igračke
+            </p>
+
+          </div>
+
+          @if (!izmenaPodesavanja) {
+
+            <button
+              type="button"
+              class="profile__button profile__button--secondary"
+              (click)="otvoriPodesavanja()"
+            >
+              Izmeni podešavanja
+            </button>
+
+          }
+
+        </div>
+
+        <!-- ==================================== -->
+        <!-- ПРОСМОТР -->
+        <!-- ==================================== -->
+
+        @if (!izmenaPodesavanja) {
+
+          <div class="profile__settings-block">
+
+            <h3>Omiljene kategorije</h3>
+
+            @if (omiljeneKategorije().length > 0) {
+
+              <div class="profile__tags">
+
+                @for (
+                  tip of omiljeneKategorije();
+                  track tip.typeId
+                ) {
+
+                  <span class="profile__tag">
+                    {{ tip.name }}
+                  </span>
+
+                }
+
+              </div>
+
+            } @else {
+
+              <p class="profile__empty">
+                ...
+              </p>
+
+            }
+
+          </div>
+
+          <div class="profile__settings-block">
+
+            <h3>Omiljene igračke</h3>
+
+            @if (omiljeneIgracke().length > 0) {
+
+              <div class="profile__favorites">
+
+                @for (
+                  igracka of omiljeneIgracke();
+                  track igracka.toyId
+                ) {
+
+                  <div class="profile__favorite">
+
+                    <img
+                      [src]="
+                        'https://toy.pequla.com' +
+                        igracka.imageUrl
+                      "
+                      [alt]="igracka.name"
+                    />
+
+                    <span>
+                      {{ igracka.name }}
+                    </span>
+
+                  </div>
+
+                }
+
+              </div>
+
+            } @else {
+
+              <p class="profile__empty">
+                ...
+              </p>
+
+            }
+
+          </div>
+
+        }
+
+        <!-- ==================================== -->
+        <!-- РЕДАКТИРОВАНИЕ -->
+        <!-- ==================================== -->
+
+        @if (izmenaPodesavanja) {
+
+          <div class="profile__settings-block">
+
+            <h3>Omiljene kategorije</h3>
+
+            <div class="profile__categories">
+
+              @for (
+                tip of tipovi();
+                track tip.typeId
+              ) {
+
+                <label class="profile__category-checkbox">
+
+                  <input
+                    type="checkbox"
+                    [checked]="jeIzabranaKategorija(tip.typeId)"
+                    (change)="promeniKategoriju(tip.typeId)"
+                  />
+
+                  <span>
+                    {{ tip.name }}
+                  </span>
+
+                </label>
+
+              }
+
+            </div>
+
+          </div>
+
+          <div class="profile__settings-block">
+
+            <h3>Omiljene igračke</h3>
+
+            <div class="profile__toy-grid">
+
+              @for (
+                igracka of igracke();
+                track igracka.toyId
+              ) {
+
+                <label
+                  class="profile__toy"
+                  [class.profile__toy--selected]="jeIzabranaIgracka(igracka.toyId)"
+                >
+
+                  <input
+                    type="checkbox"
+                    [checked]="jeIzabranaIgracka(igracka.toyId)"
+                    (change)="promeniIgracku(igracka.toyId)"
+                  />
+
+                  <img
+                    [src]="
+                      'https://toy.pequla.com' +
+                      igracka.imageUrl
+                    "
+                    [alt]="igracka.name"
+                  />
+
+                  <span>
+                    {{ igracka.name }}
+                  </span>
+
+                </label>
+
+              }
+
+            </div>
+
+          </div>
+
+          <div class="profile__form-actions">
+
+            <button
+              type="button"
+              class="profile__button profile__button--primary"
+              (click)="sacuvajPodesavanja()"
+            >
+              Sačuvaj
+            </button>
+
+            <button
+              type="button"
+              class="profile__button profile__button--secondary"
+              (click)="otkaziPodesavanja()"
+            >
+              Otkaži
+            </button>
+
+          </div>
+
+        }
+
+      </section>
+
+    </div>
+
+  }
+
+</section>

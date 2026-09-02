@@ -1,0 +1,172 @@
+<section class="toy-details">
+
+  @if (ucitavanje) {
+    <div class="toy-details__message">
+      Učitavanje igračke...
+    </div>
+  }
+
+  @if (greska) {
+    <div class="toy-details__error">
+      <p>{{ greska }}</p>
+      <a routerLink="/toys">
+        Nazad na katalog
+      </a>
+    </div>
+  }
+
+  @if (!ucitavanje && !greska && igracka) {
+
+    <a routerLink="/toys" class="toy-details__back">
+      &larr; Nazad na katalog
+    </a>
+
+    <div class="toy-details__content">
+
+      <div class="toy-details__image-wrapper">
+        <img
+          [src]="'https://toy.pequla.com' + igracka.imageUrl"
+          [alt]="igracka.name"
+          class="toy-details__image"
+        />
+      </div>
+
+      <div class="toy-details__info">
+
+        <span class="toy-details__type">
+          {{ igracka.type.name }}
+        </span>
+
+        <h1 class="toy-details__title">
+          {{ igracka.name }}
+        </h1>
+
+        <!-- Блок средней оценки игрушки -->
+        <div class="toy-details__rating">
+          <app-star-rating [rating]="prosrecnaOcena" [readonly]="true"></app-star-rating>
+          <span class="toy-details__rating-value">({{ prosrecnaOcena }})</span>
+        </div>
+
+        <p class="toy-details__description">
+          {{ igracka.description }}
+        </p>
+
+        <div class="toy-details__parameters">
+
+          <div class="toy-details__parameter">
+            <span>Uzrast</span>
+            <strong>
+              {{ igracka.ageGroup.name }}
+            </strong>
+          </div>
+
+          <div class="toy-details__parameter">
+            <span>Ciljna grupa</span>
+            <strong>
+              {{ igracka.targetGroup }}
+            </strong>
+          </div>
+
+          <div class="toy-details__parameter">
+            <span>Tip igračke</span>
+            <strong>
+              {{ igracka.type.name }}
+            </strong>
+          </div>
+
+          <div class="toy-details__parameter">
+            <span>Datum proizvodnje</span>
+            <strong>
+              {{ igracka.productionDate }}
+            </strong>
+          </div>
+
+        </div>
+
+        <div class="toy-details__purchase">
+          <strong class="toy-details__price">
+            {{ igracka.price | number:'1.0-0' }} RSD
+          </strong>
+
+          <button
+            type="button"
+            class="toy-details__button"
+            (click)="rezervisiIgracku()"
+          >
+            Rezerviši
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Секция отзывов -->
+    <section class="reviews">
+
+      <h2>Recenzije</h2>
+
+      @if (recenzije.length === 0) {
+        <p class="reviews__empty">
+          Ova igračka još nema recenzija.
+        </p>
+      }
+
+      <div class="reviews__list">
+        @for (recenzija of recenzije; track recenzija.id) {
+          <article class="review">
+
+            <div class="review__header">
+              <div class="review__author-info">
+                <strong class="review__author">
+                  {{ recenzija.korisnik }}
+                </strong>
+                <small class="review__date">
+                  {{ recenzija.datum | date:'dd.MM.yyyy.' }}
+                </small>
+              </div>
+
+              <!-- Отображение звёздочек отзыва -->
+              <div class="review__rating">
+                <app-star-rating [rating]="recenzija.ocena" [readonly]="true"></app-star-rating>
+              </div>
+            </div>
+
+            <p class="review__comment">
+              {{ recenzija.komentar }}
+            </p>
+
+          </article>
+        }
+      </div>
+
+      @if (mozeDaOceni) {
+        <div class="review-form">
+
+          <h3>Ostavite recenziju</h3>
+
+          <label for="komentar">
+            Komentar
+          </label>
+
+          <textarea
+            id="komentar"
+            [(ngModel)]="noviKomentar"
+            placeholder="Napišite svoje mišljenje..."
+          ></textarea>
+
+          <button
+            type="button"
+            (click)="posaljiRecenziju()"
+          >
+            Objavi recenziju
+          </button>
+
+        </div>
+      }
+
+    </section>
+
+  }
+
+</section>

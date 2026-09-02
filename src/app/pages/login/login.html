@@ -1,0 +1,52 @@
+<section class="login">
+  <mat-card class="login_card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title><h1>Prijava</h1></mat-card-title>
+      <mat-card-subtitle class="login_description">
+        Prijavite se na svoj nalog.
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (greska) {
+        <div class="login_error">
+          {{ greska }}
+        </div>
+      }
+
+      <form #loginForm="ngForm" (ngSubmit)="prijaviSe(loginForm)" class="login_form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput name="email" type="email" required ngModel #email="ngModel" />
+          <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Lozinka</mat-label>
+          <input matInput name="password" [type]="hidePassword ? 'password' : 'text'" required ngModel />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword"
+          >
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" class="full-width login_button" type="submit" [disabled]="loginForm.invalid">
+          Prijavi se
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-footer class="login_register">
+      <p>
+        Nemate nalog?
+        <a routerLink="/register">Registrujte se</a>
+      </p>
+    </mat-card-footer>
+  </mat-card>
+</section>

@@ -1,0 +1,32 @@
+<mat-card class="toy-card" appearance="outlined">
+  <div class="toy-card_image-wrapper">
+    <img mat-card-image [src]="'https://toy.pequla.com' + toy().imageUrl" [alt]="toy().name" class="toy-card_image" />
+  </div>
+  <mat-card-content class="toy-card_content">
+    <span class="toy-card_type">{{ toy().type.name }}</span>
+    <h2 class="toy-card_title">{{ toy().name }}</h2>
+
+    <div class="toy-card_rating">
+      <app-star-rating [rating]="averageRating" [readonly]="true"></app-star-rating>
+      <span class="toy-card_rating-value">({{ averageRating }})</span>
+    </div>
+
+    <p class="toy-card_description">
+      {{ toy().description }}
+    </p>
+
+    <div class="toy-card_info">
+      <span>Uzrast: {{ toy().ageGroup.name }}</span>
+      <span>Za: {{ toy().targetGroup }}</span>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="toy-card_bottom">
+    <strong class="toy-card_price">
+      {{ toy().price | number: '1.0-0' }} RSD
+    </strong>
+    <button mat-flat-button color="primary" (click)="onDetailsClick()">
+      Detalji
+    </button>
+  </mat-card-actions>
+</mat-card>
